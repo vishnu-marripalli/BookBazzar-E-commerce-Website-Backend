@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
-import { UserRolesEnum,
-    AvailableUserRoles,
+import { 
+    UserRolesEnum,
     UserLoginType,
     AvailableUserRoles,
+    AvailableSocialLogins,
     USER_TEMPORARY_TOKEN_EXPIRY 
-} from "../../constants";
+} from "../../constants.js";
+
+import bcrypt from 'bcrypt'
+import crypto from 'crypto'
+import jwt from'jsonwebtoken'
 
 const UserSchema = new mongoose.Schema({
     email:{
@@ -111,4 +116,4 @@ UserSchema.methods.isPasswordCorrect = async function (password) {
 
 const User = mongoose.model("User",UserSchema);
 
-module.exports = { User };
+ export default User;

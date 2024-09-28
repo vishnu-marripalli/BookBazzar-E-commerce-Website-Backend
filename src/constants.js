@@ -5,7 +5,7 @@ export const UserRolesEnum = {
     USER: "USER",
   };
 
-
+  export const USER_OTP_EXPIRY = 2;
   export const AvailableUserRoles = Object.values(UserRolesEnum);
 
   export const UserLoginType = {
