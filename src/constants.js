@@ -5,8 +5,14 @@ export const UserRolesEnum = {
     USER: "USER",
   };
 
+  export const BookConditionEnum = {
+    NEW: "NEW",
+    USED: "USED",
+  };
+
   export const USER_OTP_EXPIRY = 2;
   export const AvailableUserRoles = Object.values(UserRolesEnum);
+  export const AvailableBookCondition = Object.values(BookConditionEnum);
 
   export const UserLoginType = {
     GOOGLE: "GOOGLE",
