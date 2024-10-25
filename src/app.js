@@ -19,7 +19,7 @@ const app = express();
 function startApp() {
     app.use(
         cors({
-          origin:  "https://bookbazzar-backend.onrender.com",
+          origin:  "https://bookbazzer.vercel.app",
           credentials: true,
         })
       );
