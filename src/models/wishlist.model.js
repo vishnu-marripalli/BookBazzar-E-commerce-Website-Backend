@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const wishlistSchema = new mongoose.Schema(
   {
-    products: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    Books: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
     },
     owner: {
       ref: 'User',

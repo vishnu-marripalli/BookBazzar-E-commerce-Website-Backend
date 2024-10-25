@@ -11,9 +11,11 @@ import {
     userSelf,
     verifyEmail,
     verifyOtp,
-    handleSocialLogin
+    handleSocialLogin,
+    updateUserProfile
  } from "../../controllers/auth/user.controller.js";
 
+ import { verifyJWT } from "../../middlewares/auth.middleware.js";
 
 
 const router = Router()
@@ -37,8 +39,9 @@ router
 
 
 //secure routes
-router.route('/logout').get(userLogout)
-router.route('/self').get(userSelf)
+router.route('/logout').get(verifyJWT,userLogout)
+router.route('/self').get(verifyJWT,userSelf)
+router.route('/self').put(verifyJWT,updateUserProfile)
 
 
 //SSO routes
@@ -51,7 +54,7 @@ router.route('/google').get(
     }
   );
   router
-    .route('/google/callback')
+    .route('/google/callback') 
     .get(passport.authenticate('google'), handleSocialLogin);
   
 

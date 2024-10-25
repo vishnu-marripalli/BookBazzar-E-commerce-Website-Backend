@@ -10,6 +10,14 @@ export const UserRolesEnum = {
     USED: "USED",
   };
 
+
+
+  export const CouponTypeEnum = {
+    FLAT: 'FLAT',
+    // PERCENTAGE: "PERCENTAGE",
+  };
+  
+  export const AvailableCouponTypes = Object.values(CouponTypeEnum);
   export const USER_OTP_EXPIRY = 2;
   export const AvailableUserRoles = Object.values(UserRolesEnum);
   export const AvailableBookCondition = Object.values(BookConditionEnum);

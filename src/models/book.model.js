@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-import { AvailableBookCondition, BookConditionEnum } from "../constants";
+import { AvailableBookCondition, BookConditionEnum } from "../constants.js";
 
 const bookSchema =new mongoose.Schema({
     title: {
@@ -10,6 +10,9 @@ const bookSchema =new mongoose.Schema({
     author: {
         required: true,
         type: String,
+    },
+    wishlist:{
+        type: Boolean
     },
     genre:{
         required: true,
@@ -36,7 +39,7 @@ const bookSchema =new mongoose.Schema({
         required: true,
         type: String,
     },
-    user: {
+    owner: {
         ref: 'User',
         type: mongoose.Schema.Types.ObjectId,
     },
@@ -68,7 +71,7 @@ const bookSchema =new mongoose.Schema({
                 default: 0,
                 type: Number,
             },
-            totalReviews:{
+            averageRating:{
                 default: 0,
                 type: Number,
             }

@@ -55,14 +55,14 @@ function generateOtp() {
   
   const userRegister=asyncHandler(async (req,res,next)=>{
     
-    const {email,password,fullName} = req.body;
+    const {setemail,setpassword,fullName} = req.body;
 
-    if (!email || !password || !fullName) {
+    if (!setemail || !setpassword || !fullName) {
         throw new ApiError(400,'All feilds are requried')
     }
 
     const existinguser = await User.find({
-        email:email
+        email:setemail
     })
   
 
@@ -71,8 +71,8 @@ function generateOtp() {
     }
 
     const user = await User.create({
-        email,
-        password,
+        email:setemail,
+        password:setpassword,
         fullName,
         isEmailVerified: false,
         loginType: UserLoginType.EMAIL_PASSWORD,
@@ -162,8 +162,8 @@ function generateOtp() {
     }
     return res
     .status(200)
-    .cookie('accesstoken',accessToken,options)
-    .cookie('refreshtoken',refreshToken,options)
+    .cookie('accessToken',accessToken,options)
+    .cookie('refreshToken',refreshToken,options)
     .json(new ApiResponse(200 ,
         { user: loggedInUser, accessToken, refreshToken }, // send access and refresh token in response if client decides to save them by themselves
         'User logged in successfully'
@@ -461,12 +461,46 @@ function generateOtp() {
           .status(301)
           .cookie('accessToken', accessToken, options) // set the access token in the cookie
           .cookie('refreshToken', refreshToken, options) // set the refresh token in the cookie
-          .redirect(
-            // redirect user to the frontend with access and refresh token in case user is not using cookies
-            `${process.env.CLIENT_SSO_REDIRECT_URL}/${accessToken}/${refreshToken}`
-          );
+          .redirect(`${process.env.CLIENT_SSO_REDIRECT_URL}/${accessToken}/${refreshToken}`);
+
       });
 
+
+      const updateUserProfile = asyncHandler(async (req, res) => {
+        const userId = req.user._id; // Assumes user ID is set in req.user by an authentication middleware
+        const { fullName, email } = req.body;
+      
+        // Validation (if not handled on the frontend)
+        if (!fullName || fullName.length < 2) {
+          throw new ApiError(400, 'Full name is required and must be at least 2 characters.');
+        }
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+          throw new ApiError(400, 'A valid email address is required.');
+        }
+      
+        try {
+          // Find and update the user's profile data
+          const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { fullName, email },
+            { new: true, runValidators: true, select: 'fullName email' } // 'new' returns the updated document
+          );
+      
+          if (!updatedUser) {
+            throw new ApiError(404, 'User not found');
+          }
+      
+          // Send updated user info back as a response
+          res.status(200).json({
+            statusCode: 200,
+            message: 'Profile updated successfully',
+            fullName: updatedUser.fullName,
+            email: updatedUser.email,
+          });
+        } catch (error) {
+          throw new ApiError(500, error.message || 'Internal server error');
+        }
+      });
 export {
     userRegister,
     userLogin,
@@ -478,6 +512,7 @@ export {
     verifyOtp,
     resetForgottenPassword,
     userSelf,
-    handleSocialLogin
+    handleSocialLogin,
+    updateUserProfile
 
 }
