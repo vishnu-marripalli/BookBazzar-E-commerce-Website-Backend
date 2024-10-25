@@ -7,7 +7,7 @@ const router = Router()
 
 router.use(verifyJWT);
 
-router.route('/').get(getUserCart)
+router.route('/').get(verifyJWT,getUserCart)
 router.route('/clear').delete(clearCart);
 
 
