@@ -17,14 +17,30 @@ import { UserLoginType, UserRolesEnum } from './constants.js';
 import ApiError from './utils/ApiError.js';
 const app = express();
 function startApp() {
-    app.use(
-        cors({
-          origin:  "https://bookbazzer.vercel.app",
-          credentials: true,
-        })
-      );
-
-
+  const allowedOrigins = [
+    "https://bookbazzer.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ];
+  
+  const corsOptions = {
+    origin: (origin, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  };
+  
+  app.use(cors(corsOptions));
+  app.options("*", cors(corsOptions));
+      
+      
+      // origin:  "https://bookbazzer.vercel.app",
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({extended: true,limit: '10mb' }))
 app.use(express.static("public"))// configure static file to save images locally
