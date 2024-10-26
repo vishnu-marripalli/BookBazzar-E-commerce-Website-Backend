@@ -30,7 +30,6 @@ const SortAndFilter = (sortType) => {
   }
 };
 
-
 const createBook = asyncHandler(async (req, res) => {
   const {
     title,
@@ -79,7 +78,7 @@ const createBook = asyncHandler(async (req, res) => {
     },
     rating:{
       averageRating:4.7,
-      averageRating:120,
+      totalReviews:120,
     },
     subImages,
     owner
@@ -89,7 +88,6 @@ const createBook = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, book, 'Book created successfully'));
 })
-
 
 const getallBooks = asyncHandler(async (req,res)=>{
   const { page = 1, limit = 10, sortType = 'latest' } = req.query;
@@ -162,10 +160,42 @@ const deleteBook = asyncHandler(async (req, res) => {
     );
 });
 
+
+const searchBook = asyncHandler(async (req, res) => {
+  const searchQuery = req.query.search?.trim() || '';
+  
+  // Return early if search query is too short
+  if (searchQuery.length < 2) {
+    return res.json([]);
+  }
+
+  try {
+    const books = await Book.find({
+      title: { $regex: searchQuery, $options: 'i' }
+    })
+    .select('title author price') // Select only needed fields
+    .limit(10);
+
+    const results = books.map(book => ({
+      value: book._id.toString(),
+      label: book.title,
+      author: book.author || '',
+      price: book.price || 0
+    }));
+
+    res.json(results);
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({ 
+      message: 'Failed to search books'
+    });
+  }
+});
 export {
   createBook,
   getallBooks,
   getbookByid,
-  deleteBook
+  deleteBook,
+  searchBook
 }
  

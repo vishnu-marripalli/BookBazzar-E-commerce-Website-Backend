@@ -1,10 +1,11 @@
 import Router from "express";
-import { createBook, deleteBook, getallBooks, getbookByid } from "../controllers/book.controller.js";
+import { createBook, deleteBook, getallBooks, getbookByid, searchBook} from "../controllers/book.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from '../middlewares/multer.middleware.js'
 
 const router = Router()
 
+router.route('/search').get(searchBook)
 router.route('/create').post(
   verifyJWT,
   upload.fields([
@@ -16,5 +17,6 @@ router.route('/create').post(
 router.route('/').get(getallBooks)
 router.route('/:bookId')
 .get(getbookByid).delete(verifyJWT,deleteBook)
+
 
 export default router;
