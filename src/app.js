@@ -21,6 +21,7 @@ function startApp() {
     "https://bookbazzer.vercel.app",
     "http://localhost:3000",
     "http://localhost:5173",
+    "https://online-bookbazaar.vercel.app"
   ];
   
   const corsOptions = {
